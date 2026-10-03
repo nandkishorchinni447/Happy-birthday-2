@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PROJECT_BROTHER.exe</title>
+<style>
+:root{
+ --bg:#030712;--panel:#0a1222;--panel2:#0e1a2e;--line:#263752;
+ --cyan:#67e8f9;--purple:#c084fc;--green:#86efac;--gold:#fde68a;
+ --red:#fb7185;--text:#e7f0ff;--muted:#91a4bf;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:
+ radial-gradient(circle at 15% 10%,#172554 0,transparent 35%),
+ radial-gradient(circle at 90% 85%,#3b0764 0,transparent 32%),var(--bg);
+ color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+ display:grid;place-items:center;padding:14px;overflow-x:hidden}
+button,input{font:inherit}
+.app{width:min(860px,100%);min-height:min(720px,calc(100vh - 28px));background:#050b16eF;
+ border:1px solid #31445f;border-radius:18px;overflow:hidden;box-shadow:0 30px 100px #000b,0 0 45px #22d3ee12}
+.top{height:48px;background:#0c1627;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 15px;gap:8px;font-size:11px;color:#93a7c4}
+.dot{width:10px;height:10px;border-radius:50%}.r{background:#fb7185}.y{background:#fbbf24}.g{background:#4ade80}
+.top .path{margin-left:8px}.top .live{margin-left:auto;color:var(--green)}
+.screen{padding:clamp(22px,5vw,52px);position:relative;min-height:670px}
+.view{animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{font-size:11px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase}
+h1{font-size:clamp(35px,8vw,76px);line-height:.95;letter-spacing:-4px;margin:15px 0}
+h2{font-size:clamp(26px,5vw,44px);margin:10px 0;letter-spacing:-2px}
+p{font-family:system-ui,sans-serif;line-height:1.7;color:#cbd8ea}
+.dim{color:var(--muted)}
+.terminal{background:#02060d;border:1px solid #20304a;border-radius:12px;padding:18px;
+ white-space:pre-wrap;line-height:1.75;font-size:12px;color:var(--green);min-height:220px;
+ box-shadow:inset 0 0 35px #0008;overflow:auto}
+.cyan{color:var(--cyan)}.pink{color:#f0abfc}.gold{color:var(--gold)}.redtxt{color:var(--red)}
+.progress{height:7px;background:#152238;border-radius:20px;margin:18px 0 7px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple),#f9a8d4);transition:.2s}
+.status{display:flex;justify-content:space-between;font-size:10px;color:#7185a3}
+.btns{display:grid;gap:10px;margin-top:18px}
+button{border:1px solid #38506e;background:#101d31;color:#dcecff;padding:14px 16px;border-radius:10px;
+ cursor:pointer;font-weight:800;transition:.15s;min-height:48px}
+button:hover{transform:translateY(-2px);border-color:#67e8f9;color:white;box-shadow:0 8px 25px #0006}
+button.primary{background:linear-gradient(100deg,#67e8f9,#c4b5fd);color:#06101d;border:0}
+button.danger{border-color:#7f3042;color:#fecdd3}
+input{width:100%;background:#02060d;border:1px solid #30445f;color:var(--cyan);padding:15px;border-radius:10px;
+ outline:none;text-align:center;font-size:17px;letter-spacing:3px}
+input:focus{border-color:var(--cyan);box-shadow:0 0 20px #22d3ee18}
+.cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}
+.card{background:linear-gradient(145deg,#0e192b,#08101e);border:1px solid var(--line);border-radius:13px;
+ padding:18px;text-align:left;cursor:pointer;min-height:125px;transition:.18s}
+.card:hover{transform:translateY(-3px);border-color:#536b8e}
+.card b{display:block;font-size:16px;margin-bottom:9px}.card small{color:var(--muted);line-height:1.5}
+.lock{color:#7185a3}
+.timeline{position:relative;margin:25px 0}.timeline:before{content:"";position:absolute;left:10px;top:5px;bottom:5px;width:1px;background:#30445f}
+.event{position:relative;padding:0 0 22px 38px}.event:before{content:"";position:absolute;left:5px;top:5px;width:11px;height:11px;border:2px solid var(--cyan);border-radius:50%;background:var(--bg)}
+.event strong{color:var(--gold)}.event p{margin:5px 0 0;font-size:14px}
+.big{font-size:clamp(55px,13vw,100px);text-align:center;line-height:1;margin:20px 0;text-shadow:0 0 30px #f0abfc55}
+.center{text-align:center}.heart{color:#fb7185}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.stat{background:#0d192a;border:1px solid var(--line);padding:15px;border-radius:10px;text-align:center}.stat b{display:block;font-size:25px;color:var(--gold);margin-bottom:5px}.stat small{color:var(--muted)}
+.note{border-left:3px solid var(--purple);padding:12px 15px;background:#111327;margin-top:18px;font-family:system-ui,sans-serif;color:#dbeafe;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#0c1728;border:1px solid #425776;padding:11px 15px;border-radius:10px;color:#dff7ff;z-index:20;opacity:0;pointer-events:none;transition:.25s;font-size:12px}.toast.show{opacity:1}
+.confetti{position:fixed;top:-20px;width:8px;height:13px;z-index:30;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(800deg);opacity:.1}}
+.shake{animation:shake .35s}.glitch{animation:glitch .18s 3}
+@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+@keyframes glitch{0%,100%{filter:none}50%{filter:hue-rotate(80deg) brightness(1.5)}}
+@media(max-width:600px){.screen{min-height:calc(100vh - 48px);padding:22px 18px}.cardgrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stat{display:flex;justify-content:space-between;align-items:center}.stat b{margin:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="path">PROJECT_BROTHER / secure_console</span><span class="live">● SYSTEM ONLINE</span></div>
+ <div class="screen" id="screen"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const screen=document.getElementById('screen'), toast=document.getElementById('toast');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function showToast(s){toast.textContent=s;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)}
+function render(html){screen.innerHTML='<div class="view">'+html+'</div>'}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function confetti(){
+ const cs=['#67e8f9','#f0abfc','#86efac','#fde68a','#c4b5fd','#fb7185'];
+ for(let i=0;i<130;i++){let e=document.createElement('i');e.className='confetti';e.style.left=Math.random()*100+'vw';e.style.background=cs[Math.random()*cs.length|0];e.style.animationDuration=(2.5+Math.random()*3.5)+'s';e.style.animationDelay=Math.random()+ 's';document.body.appendChild(e);setTimeout(()=>e.remove(),7000)}
+}
+async function boot(){
+ render(`<div class="kicker">// CLASSIFIED PROGRAM</div><h1>PROJECT_<span class="pink">BROTHER</span>.exe</h1>
+ <p class="dim">A highly classified birthday protocol has been discovered on this device.</p>
+ <div class="terminal" id="bootlog"></div><div class="progress"><div class="bar" id="bar"></div></div>
+ <div class="status"><span id="st">AWAITING AUTHORIZATION</span><span id="pc">0%</span></div>
+ <div class="btns"><button class="primary" id="start">▶ INITIATE PROJECT</button></div>`);
+ document.getElementById('start').onclick=runBoot;
+}
+async function runBoot(){
+ const btn=document.getElementById('start');btn.disabled=true;btn.textContent='⏳ AUTHENTICATING...';
+ const log=document.getElementById('bootlog'), bar=document.getElementById('bar'), pc=document.getElementById('pc'), st=document.getElementById('st');
+ const lines=[
+  '> establishing encrypted connection...',
+  '> locating brother.dll ................. FOUND',
+  '> scanning childhood_memory.dat ........ FOUND',
+  '> checking sibling bond ................ ∞',
+  '> attempting to uninstall brother.dll .. FAILED',
+  '> reason: SYSTEM DEPENDENCY',
+  '> loading classified birthday protocol...',
+  '> bypassing birthday security...',
+  '> ACCESS GRANTED.'
+ ];
+ for(let i=0;i<lines.length;i++){await wait(330);log.textContent+=lines[i]+'\\n';let p=Math.round((i+1)/lines.length*100);bar.style.width=p+'%';pc.textContent=p+'%';st.textContent=p<45?'SCANNING SYSTEM':p<85?'BYPASSING SECURITY':'ACCESS GRANTED'}
+ await wait(650);os();
+}
+function os(){
+ render(`<div class="kicker">// secure desktop unlocked</div><h2>BROTHER_OS <span class="cyan">v∞</span></h2>
+ <p class="dim">Welcome, authorized user. Your birthday files are encrypted across four modules.</p>
+ <div class="cardgrid">
+  <div class="card" id="mem"><b>🧠 MEMORY_ARCHIVE</b><small>Recover selected moments from previous versions of your life.</small></div>
+  <div class="card" id="time"><b>🕰️ TIME_MACHINE</b><small>Travel through the timeline and retrieve the final birthday packet.</small></div>
+  <div class="card" id="scan"><b>🧪 BROTHER_ANALYZER</b><small>Run a completely scientific analysis of the subject.</small></div>
+  <div class="card" id="secret"><b>🔒 SECRET_FOLDER</b><small class="lock">ACCESS LOCKED — requires 3 system keys.</small></div>
+ </div>
+ <div class="terminal" style="min-height:0;margin-top:22px;color:#91a4bf">SYSTEM MESSAGE:
+ <span class="green">No malware detected.</span>
+ One extremely powerful brother detected.
+ Recommendation: continue celebration.</div>`);
+ document.getElementById('mem').onclick=memories;
+ document.getElementById('time').onclick=timeMachine;
+ document.getElementById('scan').onclick=analyzer;
+ document.getElementById('secret').onclick=secret;
+}
+function memories(){
+ render(`<div class="kicker">// MEMORY_ARCHIVE</div><h2>Recovered Files</h2><p class="dim">Some files were corrupted by time. The important ones survived.</p>
+ <div class="timeline">
+  <div class="event"><strong>VERSION 1.0 — CHILDHOOD</strong><p>Two siblings. Unlimited arguments. Somehow still on the same team.</p></div>
+  <div class="event"><strong>VERSION 2.0 — CHAOS UPDATE</strong><p>Inside jokes, stupid laughter, and memories that would make absolutely no sense to anyone else.</p></div>
+  <div class="event"><strong>VERSION 3.0 — TODAY</strong><p>Different versions of ourselves, same brotherhood.</p></div>
+ </div>
+ <div class="note">Some memories don't need to be stored on a hard drive. They're permanently installed in the heart.</div>
+ <div class="btns"><button class="primary" id="back">← RETURN TO BROTHER_OS</button></div>`);
+ document.getElementById('back').onclick=os;
+}
+function timeMachine(){
+ render(`<div class="kicker">// TEMPORAL ENGINE</div><h2>TIME_MACHINE.exe</h2><p class="dim">Destination sequence loaded. Press the button to travel.</p>
+ <div class="terminal" id="travel">TEMPORAL ENGINE: STANDBY\\nTARGET: YOUR BROTHER'S LIFE\\nSTATUS: READY</div>
+ <div class="btns"><button class="primary" id="travelBtn">⚡ START TIME TRAVEL</button><button id="back">← RETURN</button></div>`);
+ document.getElementById('back').onclick=os;document.getElementById('travelBtn').onclick=travel;
+}
+async function travel(){
+ const t=document.getElementById('travel'),b=document.getElementById('travelBtn');b.disabled=true;
+ const years=['2010','2015','2020','2025','TODAY'];
+ t.textContent='';
+ for(const y of years){await wait(650);t.textContent+='>> JUMPING TO '+y+'...\\n';t.classList.remove('glitch');void t.offsetWidth;t.classList.add('glitch')}
+ await wait(500);
+ t.innerHTML='<span class="cyan">TEMPORAL LOCK ACQUIRED.</span>\\n\\nWe checked every version.\\nEvery update.\\nEvery weird bug.\\n\\n<span class="gold">RESULT:</span> Still my brother. ❤️\\n\\n<span class="green">Final destination unlocked: BIRTHDAY PROTOCOL.</span>';
+ b.textContent='🎂 OPEN FINAL PROTOCOL';b.disabled=false;b.onclick=finale;
+}
+function analyzer(){
+ render(`<div class="kicker">// DIAGNOSTIC LAB</div><h2>BROTHER_ANALYZER</h2><p class="dim">Running an extremely scientific and definitely unbiased scan...</p>
+ <div class="terminal" id="scanlog">INITIALIZING SCANNER...</div>
+ <div class="btns"><button id="back">← RETURN</button></div>`);
+ document.getElementById('back').onclick=os;runScan();
+}
+async function runScan(){
+ const l=document.getElementById('scanlog');await wait(500);
+ const rows=['Sense of humor ................. 97%','Sibling compatibility .......... 100%','Annoying level .................. 84%','Kindness ........................ CLASSIFIED','Coolness ......................... ERROR: TOO HIGH','Legendary status ................ CONFIRMED'];
+ for(const x of rows){await wait(360);l.textContent+= '\\n'+x}
+ await wait(450);l.textContent+='\\n\\nFINAL DIAGNOSIS: LEGENDARY BROTHER\\nTreatment: Cake + Happiness + Unlimited Respect.';
+}
+function secret(){
+ render(`<div class="kicker">// SECURITY CHECK</div><h2>SECRET_FOLDER 🔒</h2><p class="dim">Three system keys are required. Hint: they are not passwords. They are choices.</p>
+ <div class="cardgrid">
+  <div class="card key" data-k="1"><b>🔑 KEY 01</b><small>Choose: <span class="gold">CAKE</span></small></div>
+  <div class="card key" data-k="2"><b>🔑 KEY 02</b><small>Choose: <span class="gold">HAPPINESS</span></small></div>
+  <div class="card key" data-k="3"><b>🔑 KEY 03</b><small>Choose: <span class="gold">BROTHERHOOD</span></small></div>
+ </div>
+ <div class="terminal" id="keys" style="min-height:100px">SECURITY: 0 / 3 KEYS ACCEPTED</div>
+ <div class="btns"><button id="back">← RETURN</button></div>`);
+ document.getElementById('back').onclick=os;
+ let got=new Set();document.querySelectorAll('.key').forEach(e=>e.onclick=()=>{got.add(e.dataset.k);e.style.borderColor='#86efac';document.getElementById('keys').textContent='SECURITY: '+got.size+' / 3 KEYS ACCEPTED';if(got.size===3){showToast('SECRET FOLDER UNLOCKED 🔓');setTimeout(finale,700)}});
+}
+function finale(){
+ render(`<div class="center"><div class="kicker">// FINAL PROTOCOL</div><div class="big">🎂</div><h1>HAPPY<br><span class="pink">BIRTHDAY, BRO!</span></h1>
+ <p class="message">You've successfully completed <b>PROJECT_BROTHER</b>.</p>
+ <div class="stats"><div class="stat"><b>∞</b><small>LOVE.exe</small></div><div class="stat"><b>0</b><small>BAD VIBES</small></div><div class="stat"><b>999+</b><small>GOOD MEMORIES</small></div></div>
+ <div class="note" style="text-align:left">You're not just my brother. You're my built-in teammate, my permanent family, and one of life's best features.<br><br>
+ May this new year of your life compile every dream, delete every worry, and create memories worth keeping forever. Whatever bugs life throws at you, I hope you always know you don't have to debug them alone. <span class="heart">❤️</span><br><br>
+ <b>Brother.dll cannot be uninstalled.</b><br>Reason: <span class="gold">INSTALLED FOR LIFE.</span></div>
+ <div class="terminal" style="min-height:0;margin-top:18px;text-align:left"><span class="cyan">BUILD REPORT</span>
+✔ Birthday protocol completed
+✔ Brother status: LEGENDARY
+✔ Friendship module: INSTALLED FOR LIFE
+✔ Luck engine: MAXIMUM
+✔ Future memories: LOADING...
+
+<span class="gold">EXIT CODE: 0 — HAVE AN EPIC YEAR! 🚀</span></div>
+ <div class="btns"><button class="primary" id="celebrate">🎉 CELEBRATE AGAIN</button></div>
+ <p class="dim" style="font-size:11px">— coded with ❤️, compiled with 💻, delivered by your sibling.</p></div>`);
+ document.getElementById('celebrate').onclick=()=>{confetti();showToast('SYSTEM PARTY MODE: ON 🎉')};confetti();
+}
+boot();
+</script>
+</body>
+</html>
